@@ -131,7 +131,11 @@ function [simul_res] = SimulateExperiments(simul_dat, flag)
         end
         
         % Load the CSV file
-        tmp1 = readmatrix(datpat);
+        try
+            tmp1 = readmatrix(datpat);
+        catch
+            tmp1 = csvread(datpat,1);
+        end
         
         % This checks if the data introduced is from PLac or Toggle Switch
         [~,b] = size(tmp1);

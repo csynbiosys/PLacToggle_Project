@@ -128,7 +128,11 @@ function [fit_res] = FitModels(fit_dat, flag)
         end
         
         % Load the CSV file and introduce it in the data structure. 
-        tmp1 = readmatrix(datpat);
+        try
+            tmp1 = readmatrix(datpat);
+        catch
+            tmp1 = csvread(datpat,1);
+        end
         if i == 1
             dat{1} = tmp1;
         else
