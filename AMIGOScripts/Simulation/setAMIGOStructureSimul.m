@@ -7,7 +7,7 @@ function [simul_res] = setAMIGOStructureSimul(simul_res, simul_dat, countPL, cou
         simul_res.inputsPL.exps.data_type='pseudo';
         simul_res.inputsPL.exps.noise_type='hetero_proportional';
         % Specify folder name and short_name
-        results_folder = strcat('MPL',datestr(now,'yyyy-mm-dd-HHMMSS'));
+        results_folder = strcat('MPL',datestr(now,'yyyy-mm-dd'));
         short_name     = strcat('MPL_Simulation');
         simul_res.inputsPL.pathd.results_folder = results_folder;                        
         simul_res.inputsPL.pathd.short_name     = short_name;
@@ -25,7 +25,7 @@ function [simul_res] = setAMIGOStructureSimul(simul_res, simul_dat, countPL, cou
         simul_res.inputsTS.exps.data_type='pseudo';
         simul_res.inputsTS.exps.noise_type='hetero_proportional';
         % Specify folder name and short_name
-        results_folder = strcat('MTS',datestr(now,'yyyy-mm-dd-HHMMSS'));
+        results_folder = strcat('MTS',datestr(now,'yyyy-mm-dd'));
         short_name     = strcat('MTS_Simulation');
         simul_res.inputsTS.pathd.results_folder = results_folder;                        
         simul_res.inputsTS.pathd.short_name     = short_name;

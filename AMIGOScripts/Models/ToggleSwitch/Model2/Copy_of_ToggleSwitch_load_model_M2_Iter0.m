@@ -1,4 +1,4 @@
-function [model] = ToggleSwitch_load_model_M2_Iter0()
+function [model] = ToggleSwitch_load_model_M2()
 
 % This script contains the main model structure that we propose for the Toggle Switch
 % Amongst the models being considered for model selection, this is Model
