@@ -193,8 +193,8 @@ function [fit_res] = FitModels(fit_dat, flag)
     tmpmat = fit_res.global_theta_guess;
     results = cell(1,100);
     
-%     fit_res.inputs.nlpsol.eSS.maxeval = 10;
-%     fit_res.inputs.nlpsol.eSS.maxtime = 10;
+%     fit_res.inputs.nlpsol.eSS.maxeval = 200;
+%     fit_res.inputs.nlpsol.eSS.maxtime = 100;
 %     k = 2;
     AMIGO_Prep(fit_res.inputs);
     parfor j=1:k
@@ -205,12 +205,14 @@ function [fit_res] = FitModels(fit_dat, flag)
     end
     
     fit_res.results = results; 
-    save(strjoin([".\Results\PEResults_", "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""), "fit_res", "fit_dat")
-
+    
     %% Select best run by comparing cost function values
-    cfv = zeros(1,k);
+    cfv = zeros(1,k)+1e200;
     for j=1:k
-        cfv(j) = fit_res.results{j}.nlpsol.fbest;     
+        try
+            cfv(j) = fit_res.results{j}.nlpsol.fbest;     
+        catch
+        end
     end
     bcfv = min(cfv);
     bind = find(cfv==bcfv(1));
@@ -218,12 +220,18 @@ function [fit_res] = FitModels(fit_dat, flag)
     fit_res.bestRun = fit_res.results{bind};
     fit_res.bestRunIndx = bind; 
     
+    
+    save(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""), "fit_res", "fit_dat")
+
     %% Plot Best results and convergence curve
     % Convergence Curve
     cc = figure();
     hold on 
     for j=1:k
-        stairs(fit_res.results{j}.nlpsol.neval, fit_res.results{j}.nlpsol.f);
+        try
+            stairs(fit_res.results{j}.nlpsol.neval, fit_res.results{j}.nlpsol.f);
+        catch
+        end
     end
     xlabel("Function Evalueation");
     ylabel("f")
@@ -233,9 +241,10 @@ function [fit_res] = FitModels(fit_dat, flag)
     
     % Best simulations against data
     for i = 1:fit_res.inputs.exps.n_exp
-        h = figure();        
+              
         switch fit_res.system
             case "PL"
+                h = figure();  
                 subplot(4,1,1:3)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.CitrineMean, fit_res.exps{i}.CitrineSD, 'black')
@@ -251,7 +260,7 @@ function [fit_res] = FitModels(fit_dat, flag)
                 saveas(h, strjoin([".\Results\PE_BestPlot_PLacExp",num2str(i), "_", date(), "Model", ...
                     num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
             case "TS"
-                g = figure;
+                h = figure;
                 subplot(6,1,1:2)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.RFPMean, fit_res.exps{i}.RFPSD, 'black')
@@ -279,7 +288,7 @@ function [fit_res] = FitModels(fit_dat, flag)
                 ylabel('aTc (ng/ml)')
                 xlabel('time(min)')
 
-                saveas(g, strjoin([".\Results\PE_BestPlot_ToggleExp",num2str(i), "_", date(), "Model", ...
+                saveas(h, strjoin([".\Results\PE_BestPlot_ToggleExp",num2str(i), "_", date(), "Model", ...
                     num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
         end
         
@@ -289,6 +298,93 @@ function [fit_res] = FitModels(fit_dat, flag)
             
     %% Generate the script with the new theta values
     genModelscript(fit_res, fit_dat);
+    
+    %% Update Bounds for model (and matrix of initial guesses)
+    
+    % Get best theta and compute new bounds with the confidence intervals
+    % from AMIGO
+    bestN = fit_res.bestRun.fit.thetabest';
+    maxN = bestN + fit_res.bestRun.fit.conf_interval;
+    minN = bestN - fit_res.bestRun.fit.conf_interval;
+    
+    for j=1:length(minN)
+        if minN(j) < 0
+            minN(j) = 0;
+        end
+    end
+    
+    load(".\ParameterEstimation\boundperIter.mat","boundperIter");
+    
+    switch fit_res.system
+        case "PL"
+            switch fit_dat.model
+                case 1
+                    switch fit_dat.iter
+                        case 1
+                            boundperIter.Iter1.PLac1.max = maxN;
+                            boundperIter.Iter1.PLac1.min = minN;
+                            boundperIter.Iter1.PLac1.guess = LHCS(boundperIter.Iter1.PLac1.max, boundperIter.Iter1.PLac1.min);
+                        case 2
+                            boundperIter.Iter2.PLac1.max = maxN;
+                            boundperIter.Iter2.PLac1.min = minN;
+                            boundperIter.Iter2.PLac1.guess = LHCS(boundperIter.Iter2.PLac1.max, boundperIter.Iter2.PLac1.min);
+                        case 3
+                            boundperIter.Iter3.PLac1.max = maxN;
+                            boundperIter.Iter3.PLac1.min = minN;
+                            boundperIter.Iter3.PLac1.guess = LHCS(boundperIter.Iter3.PLac1.max, boundperIter.Iter3.PLac1.min);
+                    end
+                case 2
+                    switch fit_dat.iter
+                        case 1
+                            boundperIter.Iter1.PLac2.max = maxN;
+                            boundperIter.Iter1.PLac2.min = minN;
+                            boundperIter.Iter1.PLac2.guess = LHCS(boundperIter.Iter1.PLac2.max, boundperIter.Iter1.PLac2.min);
+                        case 2
+                            boundperIter.Iter2.PLac2.max = maxN;
+                            boundperIter.Iter2.PLac2.min = minN;
+                            boundperIter.Iter2.PLac2.guess = LHCS(boundperIter.Iter2.PLac2.max, boundperIter.Iter2.PLac2.min);
+                        case 3
+                            boundperIter.Iter3.PLac2.max = maxN;
+                            boundperIter.Iter3.PLac2.min = minN;
+                            boundperIter.Iter3.PLac2.guess = LHCS(boundperIter.Iter3.PLac2.max, boundperIter.Iter3.PLac2.min);
+                    end
+            end
+        case "TS"
+            switch fit_dat.model
+                case 1
+                    switch fit_dat.iter
+                        case 1
+                            boundperIter.Iter1.TS1.max = maxN;
+                            boundperIter.Iter1.TS1.min = minN;
+                            boundperIter.Iter1.TS1.guess = LHCS(boundperIter.Iter1.TS1.max, boundperIter.Iter1.TS1.min);
+                        case 2
+                            boundperIter.Iter2.TS1.max = maxN;
+                            boundperIter.Iter2.TS1.min = minN;
+                            boundperIter.Iter2.TS1.guess = LHCS(boundperIter.Iter2.TS1.max, boundperIter.Iter2.TS1.min);
+                        case 3
+                            boundperIter.Iter3.TS1.max = maxN;
+                            boundperIter.Iter3.TS1.min = minN;
+                            boundperIter.Iter3.TS1.guess = LHCS(boundperIter.Iter3.TS1.max, boundperIter.Iter3.TS1.min);
+                    end
+                case 2
+                    switch fit_dat.iter
+                        case 1
+                            boundperIter.Iter1.TS2.max = maxN;
+                            boundperIter.Iter1.TS2.min = minN;
+                            boundperIter.Iter1.TS2.guess = LHCS(boundperIter.Iter1.TS2.max, boundperIter.Iter1.TS2.min);
+                        case 2
+                            boundperIter.Iter2.TS2.max = maxN;
+                            boundperIter.Iter2.TS2.min = minN;
+                            boundperIter.Iter2.TS2.guess = LHCS(boundperIter.Iter2.TS2.max, boundperIter.Iter2.TS2.min);
+                        case 3
+                            boundperIter.Iter3.TS2.max = maxN;
+                            boundperIter.Iter3.TS2.min = minN;
+                            boundperIter.Iter3.TS2.guess = LHCS(boundperIter.Iter3.TS2.max, boundperIter.Iter3.TS2.min);
+                    end
+            end
+    end
+    save(".\ParameterEstimation\boundperIter.mat","boundperIter");
+    
     
 end
 
