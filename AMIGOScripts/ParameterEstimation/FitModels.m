@@ -5,12 +5,19 @@
 % model iteration and set of data using AMIGO. 
 %
 % Inputs: 
-%   - fit_dat: 
+%   - fit_dat: structure with 4 fields (mainpath, files, model, iter).
+%   See ExampleFitModelsWithData.m for more details. 
 %   - flag: String containing some information about the fit (also
 %   used to not overwrite saved result files). 
 %
 % Outputs: 
-%   - fit_res: 
+%   - fit_res: structure containing the results of the PE. As fiels you
+%   should have exps (experimetnal data from the CSV), inputs (AMIGO
+%   structure for the PE), system (string indicating if the PE was done for
+%   PLac or Toggle Switch), global_theta_guess (matrix with the initial
+%   guesses used for the PE), results (AMIGO results for each run),
+%   bestRun(the run with better cost function value) and bestRunIndx(index
+%   of fit_res.results corresponding to the best run). 
 %   - Plots with the simulations for each experiment will also be generated and
 %   saved. 
 
@@ -153,7 +160,7 @@ function [fit_res] = FitModels(fit_dat, flag)
         % This checks if the data introduced is from PLac or Toggle Switch
         [~,b] = size(tmp1);
         
-        if b == 5
+        if b == 5 || b == 6
             % Extract all information from CSV for the experiment
             fit_res.exps{i}.preIPTG = tmp1(1,1);
             fit_res.exps{i}.time = tmp1(:,3);

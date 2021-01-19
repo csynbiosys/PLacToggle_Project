@@ -140,7 +140,7 @@ function [simul_res] = SimulateExperiments(simul_dat, flag)
         % This checks if the data introduced is from PLac or Toggle Switch
         [~,b] = size(tmp1);
         
-        if b == 5
+        if b == 5 || b == 6
             countPL = countPL+1;
             % Extract all information from CSV for the experiment
             simul_res.expsPL{countPL}.preIPTG = tmp1(1,1);

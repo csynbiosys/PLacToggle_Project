@@ -1,6 +1,6 @@
 function [fit_res] = setAMIGOStructureFit(fit_res, fit_dat)
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PLac
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
     % Section shared by both systems. 
     fit_res.inputs.exps.n_exp = length(fit_res.exps);
     fit_res.inputs.exps.data_type='real';
@@ -19,7 +19,7 @@ function [fit_res] = setAMIGOStructureFit(fit_res, fit_dat)
     %OPTIMIZATION
     fit_res.inputs.nlpsol.nlpsolver='eSS';
     fit_res.inputs.nlpsol.eSS.maxeval = 200000;
-    fit_res.inputs.nlpsol.eSS.maxtime = 5000;
+    fit_res.inputs.nlpsol.eSS.maxtime = 50000000;
     fit_res.inputs.nlpsol.eSS.local.solver = 'lsqnonlin'; 
     fit_res.inputs.nlpsol.eSS.local.finish = 'lsqnonlin'; 
     

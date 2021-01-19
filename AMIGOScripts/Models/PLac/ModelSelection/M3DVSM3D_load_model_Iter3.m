@@ -1,4 +1,4 @@
-function [model] = M3DVSM3D_load_model_Iter0()
+function [model] = M3DVSM3D_load_model_Iter3()
 
 % As the experimental data are acquired in A.U., M3D is modified by adding
 % an algebraic equation for the conversion from molecules number to A.U.
