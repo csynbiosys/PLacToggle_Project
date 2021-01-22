@@ -228,8 +228,7 @@ function [fit_res] = FitModels(fit_dat, flag)
     fit_res.bestRunIndx = bind; 
     
     
-    save(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""), "fit_res", "fit_dat")
-
+    
     %% Plot Best results and convergence curve
     % Convergence Curve
     cc = figure();
@@ -245,17 +244,34 @@ function [fit_res] = FitModels(fit_dat, flag)
     title(strjoin(["Cost Function ", fit_res.system, " Model ", fit_dat.model, ", IterGen ", fit_dat.iter], ""))
     saveas(cc, strjoin([".\Results\PE_ConvergencePlot_",fit_res.system, "_", date(), "Model", ...
                 num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
+           
+            
+    inputs = {};
+    inputs.model = fit_res.inputs.model;
+    inputs.model.par = fit_res.bestRun.fit.thetabest'; 
+    inputs.pathd = fit_res.inputs.pathd;
+    inputs.exps = fit_res.inputs.exps;
+    inputs.ivpsol = fit_res.inputs.ivpsol;
+    inputs.plotd = fit_res.inputs.plotd;
+    
+    fit_res.bestSimul = cell(1,fit_res.inputs.exps.n_exp);
+    
+    AMIGO_Prep(inputs);
     
     % Best simulations against data
     for i = 1:fit_res.inputs.exps.n_exp
               
         switch fit_res.system
             case "PL"
+                inputs.exps.exp_y0{i}=M3D_steady_state(inputs.model.par, fit_res.exps{i}.preIPTG);
+                simbestres = AMIGO_SModel_NoVer(inputs);
+                fit_res.bestSimul{i} = simbestres;
+                
                 h = figure();  
                 subplot(4,1,1:3)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.CitrineMean, fit_res.exps{i}.CitrineSD, 'black')
-                plot(fit_res.bestRun.sim.tsim{i}, fit_res.bestRun.sim.states{i}(:,4), 'g')
+                plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,4), 'g')
                 title(strjoin(["PLac Best Theta Simulation Model ",  num2str(fit_dat.model), ", iteration ", num2str(fit_dat.iter)], ""))
                 ylabel('Citrine (A.U.)')
 
@@ -267,20 +283,39 @@ function [fit_res] = FitModels(fit_dat, flag)
                 saveas(h, strjoin([".\Results\PE_BestPlot_PLacExp",num2str(i), "_", date(), "Model", ...
                     num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
             case "TS"
+                switch fit_dat.model
+                    case 1
+                        inputs.exps.exp_y0{i}=M1_Compute_SteadyState_OverNight(inputs,...
+                            inputs.model.par,[fit_res.exps{i}.RFPMean(1), fit_res.exps{i}.GFPMean(1)],...
+                            [fit_res.exps{i}.preIPTG, fit_res.exps{i}.preaTc]+1e-7);
+        %                 fit_res.inputs.exps.exp_y0{i}=M1SF_Compute_SteadyState_OverNight(fit_res.inputs,...
+        %                     fit_res.inputs.model.par,[fit_res.exps{i}.RFPMean(1), fit_res.exps{i}.GFPMean(1)],...
+        %                     [fit_res.exps{i}.preIPTG, fit_res.exps{i}.preaTc]+1e-7);
+                    case 2
+                        inputs.exps.exp_y0{i}=M2_Compute_SteadyState_OverNight(inputs,...
+                            inputs.model.par,[fit_res.exps{i}.RFPMean(1), fit_res.exps{i}.GFPMean(1)],...
+                            [fit_res.exps{i}.preIPTG, fit_res.exps{i}.preaTc]+1e-7);
+        %                 fit_res.inputs.exps.exp_y0{i}=M2SF_Compute_SteadyState_OverNight(fit_res.inputs,...
+        %                     fit_res.inputs.model.par,[fit_res.exps{i}.RFPMean(1), fit_res.exps{i}.GFPMean(1)],...
+        %                     [fit_res.exps{i}.preIPTG, fit_res.exps{i}.preaTc]+1e-7);
+                end
+                simbestres = AMIGO_SModel_NoVer(inputs);
+                fit_res.bestSimul{i} = simbestres;
+                
                 h = figure;
                 subplot(6,1,1:2)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.RFPMean, fit_res.exps{i}.RFPSD, 'black')
-                plot(fit_res.bestRun.sim.tsim{i}, fit_res.bestRun.sim.states{i}(:,3), 'r')
-%                     plot(fit_res.bestRun.sim.tsim{i}, fit_res.bestRun.sim.states{i}(:,5), 'r')
+                plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,3), 'r')
+%                     plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,5), 'r')
                 title(strjoin(["Toggle Switch Best Theta Simulation Model ",  num2str(fit_dat.model), ", iteration ", num2str(fit_dat.iter)], ""))
                 ylabel('RFP (A.U.)')
 
                 subplot(6,1,3:4)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.GFPMean, fit_res.exps{i}.GFPSD, 'black')
-                plot(fit_res.bestRun.sim.tsim{i}, fit_res.bestRun.sim.states{i}(:,4), 'g')
-%                     plot(fit_res.bestRun.sim.tsim{i}, fit_res.bestRun.sim.states{i}(:,6), 'g')
+                plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,4), 'g')
+%                     plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,6), 'g')
                 ylabel('GFP (A.U.)')
 
 
@@ -302,7 +337,8 @@ function [fit_res] = FitModels(fit_dat, flag)
     end
     
             
-            
+    save(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""), "fit_res", "fit_dat")
+        
     %% Generate the script with the new theta values
     genModelscript(fit_res, fit_dat);
     
