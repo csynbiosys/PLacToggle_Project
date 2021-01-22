@@ -212,10 +212,13 @@ function [fit_res] = FitModels(fit_dat, flag)
     AMIGO_Prep(fit_res.inputs);
     parfor j=1:k
 %     for j=1:2    
-        if isempty(results{j})
-            tmpth = tmpmat(j,:);
-            peRes = mainRunPE(fit_res, fit_dat, flag, tmpth, j);
-            results{j} = peRes;
+        try
+            if isempty(results{j})
+                tmpth = tmpmat(j,:);
+                peRes = mainRunPE(fit_res, fit_dat, flag, tmpth, j);
+                results{j} = peRes;
+            end
+        catch
         end
     end
     
