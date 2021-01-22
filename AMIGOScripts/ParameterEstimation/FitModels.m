@@ -203,12 +203,20 @@ function [fit_res] = FitModels(fit_dat, flag)
 %     fit_res.inputs.nlpsol.eSS.maxeval = 200;
 %     fit_res.inputs.nlpsol.eSS.maxtime = 100;
 %     k = 2;
+
+    if isfile(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""))
+        tmp1 = load(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""));
+        results = tmp1.fit_res.results;
+    end
+
     AMIGO_Prep(fit_res.inputs);
     parfor j=1:k
 %     for j=1:2    
-        tmpth = tmpmat(j,:);
-        peRes = mainRunPE(fit_res, fit_dat, flag, tmpth, j);
-        results{j} = peRes;
+        if isempty(results{j})
+            tmpth = tmpmat(j,:);
+            peRes = mainRunPE(fit_res, fit_dat, flag, tmpth, j);
+            results{j} = peRes;
+        end
     end
     
     fit_res.results = results; 
@@ -229,22 +237,7 @@ function [fit_res] = FitModels(fit_dat, flag)
     
     
     
-    %% Plot Best results and convergence curve
-    % Convergence Curve
-    cc = figure();
-    hold on 
-    for j=1:k
-        try
-            stairs(fit_res.results{j}.nlpsol.neval, fit_res.results{j}.nlpsol.f);
-        catch
-        end
-    end
-    xlabel("Function Evalueation");
-    ylabel("f")
-    title(strjoin(["Cost Function ", fit_res.system, " Model ", fit_dat.model, ", IterGen ", fit_dat.iter], ""))
-    saveas(cc, strjoin([".\Results\PE_ConvergencePlot_",fit_res.system, "_", date(), "Model", ...
-                num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
-           
+    %% Plot Best results and convergence curve       
             
     inputs = {};
     inputs.model = fit_res.inputs.model;
@@ -259,19 +252,29 @@ function [fit_res] = FitModels(fit_dat, flag)
     AMIGO_Prep(inputs);
     
     % Best simulations against data
+    
+    % Separate loop so AMIGO does not close the plots in a loop
     for i = 1:fit_res.inputs.exps.n_exp
-              
         switch fit_res.system
             case "PL"
                 inputs.exps.exp_y0{i}=M3D_steady_state(inputs.model.par, fit_res.exps{i}.preIPTG);
                 simbestres = AMIGO_SModel_NoVer(inputs);
                 fit_res.bestSimul{i} = simbestres;
+            case "TS"
                 
-                h = figure();  
+        end
+    end
+    
+    for i = 1:fit_res.inputs.exps.n_exp
+              
+        switch fit_res.system
+            case "PL"
+
+                h = figure(i);  
                 subplot(4,1,1:3)
                 hold on
                 errorbar(fit_res.exps{i}.time, fit_res.exps{i}.CitrineMean, fit_res.exps{i}.CitrineSD, 'black')
-                plot(simbestres.sim.tsim{i}, simbestres.sim.states{i}(:,4), 'g')
+                plot(fit_res.bestSimul{i}.sim.tsim{i}, fit_res.bestSimul{i}.sim.states{i}(:,4), 'g')
                 title(strjoin(["PLac Best Theta Simulation Model ",  num2str(fit_dat.model), ", iteration ", num2str(fit_dat.iter)], ""))
                 ylabel('Citrine (A.U.)')
 
@@ -282,6 +285,7 @@ function [fit_res] = FitModels(fit_dat, flag)
                 xlabel('time(min)')
                 saveas(h, strjoin([".\Results\PE_BestPlot_PLacExp",num2str(i), "_", date(), "Model", ...
                     num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
+                hold off
             case "TS"
                 switch fit_dat.model
                     case 1
@@ -336,6 +340,20 @@ function [fit_res] = FitModels(fit_dat, flag)
         
     end
     
+    % Convergence Curve
+    cc = figure();
+    hold on 
+    for j=1:k
+        try
+            stairs(fit_res.results{j}.nlpsol.neval, fit_res.results{j}.nlpsol.f);
+        catch
+        end
+    end
+    xlabel("Function Evalueation");
+    ylabel("f")
+    title(strjoin(["Cost Function ", fit_res.system, " Model ", fit_dat.model, ", IterGen ", fit_dat.iter], ""))
+    saveas(cc, strjoin([".\Results\PE_ConvergencePlot_",fit_res.system, "_", date(), "Model", ...
+                num2str(fit_dat.model),"_Iter", num2str(fit_dat.iter), "_", flag,".png"], ""))
             
     save(strjoin([".\Results\PEResults_",fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter,"_", date, "_", flag, ".mat"],""), "fit_res", "fit_dat")
         

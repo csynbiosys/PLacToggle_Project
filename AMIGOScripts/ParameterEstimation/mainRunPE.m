@@ -1,5 +1,5 @@
 
-function [peRes] = mainRunPE(fit_res, fit_dat, flag, tmpth, j)
+function [peRes] = mainRunPE(fit_res, fit_dat, flag, tmpth, s)
 
     fit_res.inputs.PEsol.global_theta_guess = tmpth;
     fit_res.inputs.model.par = tmpth;
@@ -34,7 +34,7 @@ function [peRes] = mainRunPE(fit_res, fit_dat, flag, tmpth, j)
 
     peRes = AMIGO_PE(fit_res.inputs);
 
-    save(strjoin([".\Results\PE_", fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter, "_", flag, "\Run_", j, ".mat"], ""), "peRes")
+    save(strjoin([".\Results\PE_", fit_res.system, "_Model", fit_dat.model, "_GenIter", fit_dat.iter, "_", flag, "\Run_", s, ".mat"], ""), "peRes")
 
 
 
