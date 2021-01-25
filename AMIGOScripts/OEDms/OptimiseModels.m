@@ -239,10 +239,13 @@ function [oed_res] = OptimiseModels(oed_dat, flag)
         case "PL"
             [k,~] = size(oed_res.initGuess);
             tmpmat = oed_res.initGuess;
+            tmpmat1 = oed_res.initGuess;
+            tmpmat2 = oed_res.initGuess;
         case "TS"
             [k,~] = size(oed_res.initGuess1);
             tmpmat1 = oed_res.initGuess1;
             tmpmat2 = oed_res.initGuess2;
+            tmpmat = oed_res.initGuess1;
     end
             
     results = cell(1,k);
