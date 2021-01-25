@@ -252,7 +252,7 @@ function [fit_res] = FitModels(fit_dat, flag)
     
     fit_res.bestSimul = cell(1,fit_res.inputs.exps.n_exp);
     
-    AMIGO_Prep(inputs);
+%     AMIGO_Prep(inputs);
     
     % Best simulations against data
     
