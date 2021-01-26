@@ -2,8 +2,8 @@ clear;
 %============================
 % RESULTS PATHS RELATED DATA
 %============================
-inputs.pathd.results_folder='TSM1_PractIdent';% Folder to keep results (in Results) for a given problem
-inputs.pathd.short_name='TSM1';          % To identify figures and reports for a given problem
+inputs.pathd.results_folder='TSM2_PractIdent';% Folder to keep results (in Results) for a given problem
+inputs.pathd.short_name='TSM2';          % To identify figures and reports for a given problem
 inputs.pathd.runident='r1';                % [] Identifier used in order not to overwrite previous
                                            % results. May be modified from command line.'run1'(default)
 
