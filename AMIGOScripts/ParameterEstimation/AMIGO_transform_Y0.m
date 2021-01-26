@@ -22,14 +22,19 @@ model2 = ...                                                              % Equa
                 
 if strcmp(inputs.model.eqns, model1) 
     for iexp=1:inputs.exps.n_exp
-        y0 = M1_Compute_SteadyState_OverNight(inputs,privstruct.theta,inputs.exps.exp_data{iexp}(1,:),inputs.meta.init_U{iexp});
+%         y0 = M1_Compute_SteadyState_OverNight(inputs,privstruct.theta,inputs.exps.exp_data{iexp}(1,:),inputs.meta.init_U{iexp});
+        y01 = M1_Compute_SteadyState_OverNight(inputs,privstruct.theta,[28.510, 1363.193],[1, 0]+1e-7);
+        y0 = M1_Compute_SteadyState_OverNight(inputs,privstruct.theta,[y01(3), y01(4)],inputs.meta.init_U{iexp});
+        
         privstruct.y_0{iexp} = y0;
         privstruct.exp_y0{iexp} = y0;
         inputs.exps.exp_y0{iexp} = y0;
     end
 elseif strcmp(inputs.model.eqns, model2) 
     for iexp=1:inputs.exps.n_exp
-        y0 = M2_Compute_SteadyState_OverNight(inputs,privstruct.theta,inputs.exps.exp_data{iexp}(1,:),inputs.meta.init_U{iexp});
+%         y0 = M2_Compute_SteadyState_OverNight(inputs,privstruct.theta,inputs.exps.exp_data{iexp}(1,:),inputs.meta.init_U{iexp});
+        y01 = M2_Compute_SteadyState_OverNight(inputs,privstruct.theta,[28.510, 1363.193],[1, 0]+1e-7);
+        y0 = M2_Compute_SteadyState_OverNight(inputs,privstruct.theta,[y01(3), y01(4)],inputs.meta.init_U{iexp});
         privstruct.y_0{iexp} = y0;
         privstruct.exp_y0{iexp} = y0;
         inputs.exps.exp_y0{iexp} = y0;

@@ -43,7 +43,7 @@ inputs.ivpsol.rtol=1.0D-13;
 inputs.ivpsol.atol=1.0D-13;
    
 % AMIGO_Prep(inputs);
-sim = AMIGO_SModel(inputs);
+sim = AMIGO_SModel_NoVer(inputs);
 
 InitialConditions = sim.sim.states{1,1}(end,:);
 
