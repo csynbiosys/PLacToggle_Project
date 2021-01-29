@@ -380,11 +380,11 @@ function [fit_res] = FitModels(fit_dat, flag)
         case "PL"
             
             for j=1:length(minN)
-                if maxN(j) > boundperIter.Iter0.PLac1.max(j)
-                    maxN(j) = boundperIter.Iter0.PLac1.max(j);
+                if maxN(j) > boundperIter.Iter1.PLac0.max
+                    maxN(j) = boundperIter.Iter1.PLac0.max;
                 end
-                if minN(j) < boundperIter.Iter0.PLac1.min(j)
-                    minN(j) = boundperIter.Iter0.PLac1.min(j);
+                if minN(j) < boundperIter.Iter1.PLac0.min
+                    minN(j) = boundperIter.Iter1.PLac0.min;
                 end
             end
             switch fit_dat.model
