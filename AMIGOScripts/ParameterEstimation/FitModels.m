@@ -228,7 +228,9 @@ function [fit_res] = FitModels(fit_dat, flag)
     cfv = zeros(1,k)+1e200;
     for j=1:k
         try
-            cfv(j) = fit_res.results{j}.nlpsol.fbest;     
+            if isreal(sum(fit_res.results{j}.fit.conf_interval))
+                cfv(j) = fit_res.results{j}.nlpsol.fbest; 
+            end
         catch
         end
     end
