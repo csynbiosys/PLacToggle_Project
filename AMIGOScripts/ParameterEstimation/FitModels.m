@@ -374,89 +374,89 @@ function [fit_res] = FitModels(fit_dat, flag)
     minN = bestN - fit_res.bestRun.fit.conf_interval;
     
     load(".\ParameterEstimation\boundperIter.mat","boundperIter");
-    
-    
-    
-    
-    switch fit_res.system
-        case "PL"
-            
-            for j=1:length(minN)
-                if maxN(j) > boundperIter.Iter0.PLac1.max(j)
-                    maxN(j) = boundperIter.Iter0.PLac1.max(j);
-                end
-                if minN(j) < boundperIter.Iter0.PLac1.min(j)
-                    minN(j) = boundperIter.Iter0.PLac1.min(j);
-                end
-            end
-            switch fit_dat.model
-                case 1
-                    switch fit_dat.iter
-                        case 1
-                            boundperIter.Iter1.PLac1.max = maxN;
-                            boundperIter.Iter1.PLac1.min = minN;
-                            boundperIter.Iter1.PLac1.guess = LHCS(boundperIter.Iter1.PLac1.max, boundperIter.Iter1.PLac1.min);
-                        case 2
-                            boundperIter.Iter2.PLac1.max = maxN;
-                            boundperIter.Iter2.PLac1.min = minN;
-                            boundperIter.Iter2.PLac1.guess = LHCS(boundperIter.Iter2.PLac1.max, boundperIter.Iter2.PLac1.min);
-                        case 3
-                            boundperIter.Iter3.PLac1.max = maxN;
-                            boundperIter.Iter3.PLac1.min = minN;
-                            boundperIter.Iter3.PLac1.guess = LHCS(boundperIter.Iter3.PLac1.max, boundperIter.Iter3.PLac1.min);
-                    end
-                case 2
-                    switch fit_dat.iter
-                        case 1
-                            boundperIter.Iter1.PLac2.max = maxN;
-                            boundperIter.Iter1.PLac2.min = minN;
-                            boundperIter.Iter1.PLac2.guess = LHCS(boundperIter.Iter1.PLac2.max, boundperIter.Iter1.PLac2.min);
-                        case 2
-                            boundperIter.Iter2.PLac2.max = maxN;
-                            boundperIter.Iter2.PLac2.min = minN;
-                            boundperIter.Iter2.PLac2.guess = LHCS(boundperIter.Iter2.PLac2.max, boundperIter.Iter2.PLac2.min);
-                        case 3
-                            boundperIter.Iter3.PLac2.max = maxN;
-                            boundperIter.Iter3.PLac2.min = minN;
-                            boundperIter.Iter3.PLac2.guess = LHCS(boundperIter.Iter3.PLac2.max, boundperIter.Iter3.PLac2.min);
-                    end
-            end
-        case "TS"
-            switch fit_dat.model
-                case 1
-                    switch fit_dat.iter
-                        case 1
-                            boundperIter.Iter1.TS1.max = maxN;
-                            boundperIter.Iter1.TS1.min = minN;
-                            boundperIter.Iter1.TS1.guess = LHCS(boundperIter.Iter1.TS1.max, boundperIter.Iter1.TS1.min);
-                        case 2
-                            boundperIter.Iter2.TS1.max = maxN;
-                            boundperIter.Iter2.TS1.min = minN;
-                            boundperIter.Iter2.TS1.guess = LHCS(boundperIter.Iter2.TS1.max, boundperIter.Iter2.TS1.min);
-                        case 3
-                            boundperIter.Iter3.TS1.max = maxN;
-                            boundperIter.Iter3.TS1.min = minN;
-                            boundperIter.Iter3.TS1.guess = LHCS(boundperIter.Iter3.TS1.max, boundperIter.Iter3.TS1.min);
-                    end
-                case 2
-                    switch fit_dat.iter
-                        case 1
-                            boundperIter.Iter1.TS2.max = maxN;
-                            boundperIter.Iter1.TS2.min = minN;
-                            boundperIter.Iter1.TS2.guess = LHCS(boundperIter.Iter1.TS2.max, boundperIter.Iter1.TS2.min);
-                        case 2
-                            boundperIter.Iter2.TS2.max = maxN;
-                            boundperIter.Iter2.TS2.min = minN;
-                            boundperIter.Iter2.TS2.guess = LHCS(boundperIter.Iter2.TS2.max, boundperIter.Iter2.TS2.min);
-                        case 3
-                            boundperIter.Iter3.TS2.max = maxN;
-                            boundperIter.Iter3.TS2.min = minN;
-                            boundperIter.Iter3.TS2.guess = LHCS(boundperIter.Iter3.TS2.max, boundperIter.Iter3.TS2.min);
-                    end
-            end
-    end
-    save(".\ParameterEstimation\boundperIter.mat","boundperIter");
-    
+%     
+%     
+%     
+%     
+%     switch fit_res.system
+%         case "PL"
+%             
+%             for j=1:length(minN)
+%                 if maxN(j) > boundperIter.Iter0.PLac1.max(j)
+%                     maxN(j) = boundperIter.Iter0.PLac1.max(j);
+%                 end
+%                 if minN(j) < boundperIter.Iter0.PLac1.min(j)
+%                     minN(j) = boundperIter.Iter0.PLac1.min(j);
+%                 end
+%             end
+%             switch fit_dat.model
+%                 case 1
+%                     switch fit_dat.iter
+%                         case 1
+%                             boundperIter.Iter1.PLac1.max = maxN;
+%                             boundperIter.Iter1.PLac1.min = minN;
+%                             boundperIter.Iter1.PLac1.guess = LHCS(boundperIter.Iter1.PLac1.max, boundperIter.Iter1.PLac1.min);
+%                         case 2
+%                             boundperIter.Iter2.PLac1.max = maxN;
+%                             boundperIter.Iter2.PLac1.min = minN;
+%                             boundperIter.Iter2.PLac1.guess = LHCS(boundperIter.Iter2.PLac1.max, boundperIter.Iter2.PLac1.min);
+%                         case 3
+%                             boundperIter.Iter3.PLac1.max = maxN;
+%                             boundperIter.Iter3.PLac1.min = minN;
+%                             boundperIter.Iter3.PLac1.guess = LHCS(boundperIter.Iter3.PLac1.max, boundperIter.Iter3.PLac1.min);
+%                     end
+%                 case 2
+%                     switch fit_dat.iter
+%                         case 1
+%                             boundperIter.Iter1.PLac2.max = maxN;
+%                             boundperIter.Iter1.PLac2.min = minN;
+%                             boundperIter.Iter1.PLac2.guess = LHCS(boundperIter.Iter1.PLac2.max, boundperIter.Iter1.PLac2.min);
+%                         case 2
+%                             boundperIter.Iter2.PLac2.max = maxN;
+%                             boundperIter.Iter2.PLac2.min = minN;
+%                             boundperIter.Iter2.PLac2.guess = LHCS(boundperIter.Iter2.PLac2.max, boundperIter.Iter2.PLac2.min);
+%                         case 3
+%                             boundperIter.Iter3.PLac2.max = maxN;
+%                             boundperIter.Iter3.PLac2.min = minN;
+%                             boundperIter.Iter3.PLac2.guess = LHCS(boundperIter.Iter3.PLac2.max, boundperIter.Iter3.PLac2.min);
+%                     end
+%             end
+%         case "TS"
+%             switch fit_dat.model
+%                 case 1
+%                     switch fit_dat.iter
+%                         case 1
+%                             boundperIter.Iter1.TS1.max = maxN;
+%                             boundperIter.Iter1.TS1.min = minN;
+%                             boundperIter.Iter1.TS1.guess = LHCS(boundperIter.Iter1.TS1.max, boundperIter.Iter1.TS1.min);
+%                         case 2
+%                             boundperIter.Iter2.TS1.max = maxN;
+%                             boundperIter.Iter2.TS1.min = minN;
+%                             boundperIter.Iter2.TS1.guess = LHCS(boundperIter.Iter2.TS1.max, boundperIter.Iter2.TS1.min);
+%                         case 3
+%                             boundperIter.Iter3.TS1.max = maxN;
+%                             boundperIter.Iter3.TS1.min = minN;
+%                             boundperIter.Iter3.TS1.guess = LHCS(boundperIter.Iter3.TS1.max, boundperIter.Iter3.TS1.min);
+%                     end
+%                 case 2
+%                     switch fit_dat.iter
+%                         case 1
+%                             boundperIter.Iter1.TS2.max = maxN;
+%                             boundperIter.Iter1.TS2.min = minN;
+%                             boundperIter.Iter1.TS2.guess = LHCS(boundperIter.Iter1.TS2.max, boundperIter.Iter1.TS2.min);
+%                         case 2
+%                             boundperIter.Iter2.TS2.max = maxN;
+%                             boundperIter.Iter2.TS2.min = minN;
+%                             boundperIter.Iter2.TS2.guess = LHCS(boundperIter.Iter2.TS2.max, boundperIter.Iter2.TS2.min);
+%                         case 3
+%                             boundperIter.Iter3.TS2.max = maxN;
+%                             boundperIter.Iter3.TS2.min = minN;
+%                             boundperIter.Iter3.TS2.guess = LHCS(boundperIter.Iter3.TS2.max, boundperIter.Iter3.TS2.min);
+%                     end
+%             end
+%     end
+%     save(".\ParameterEstimation\boundperIter.mat","boundperIter");
+%     
     
 end
 
