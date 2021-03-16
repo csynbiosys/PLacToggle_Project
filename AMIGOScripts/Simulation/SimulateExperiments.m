@@ -199,7 +199,7 @@ function [simul_res] = SimulateExperiments(simul_dat, flag)
             h = figure;
             subplot(4,1,1:3)
             hold on
-%             errorbar(simul_res.expsPL{i}.time, simul_res.expsPL{i}.CitrineMean, simul_res.expsPL{i}.CitrineSD, 'black')
+            errorbar(simul_res.expsPL{i}.time, simul_res.expsPL{i}.CitrineMean, simul_res.expsPL{i}.CitrineSD, 'black')
             switch simul_dat.model
                 case 0
                     plot(simul_res.resultsPL.sim.tsim{i}, simul_res.resultsPL.sim.states{i}(:,4), 'g')
