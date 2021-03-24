@@ -1,7 +1,7 @@
 
 
 %% Iteration 0 
-simul_res0 = load("Results\SimulationResults_16-Mar-2021_PLacIter0ValidationSet.mat");
+simul_res0 = load("Results\SimulationResults_17-Mar-2021_PLacIter0ValidationSet.mat");
 
 it0 = zeros(288,4);
 it0(:,1) = simul_res0.simul_res.resultsPL.sim.tsim{1};
@@ -31,7 +31,7 @@ dlmwrite(['Validate\Iter0.csv'],it0,'-append');
 
 
 %% Iteration 1, Model 1 
-simul_res11 = load("Results\SimulationResults_16-Mar-2021_PLacIter1Model1ValidationSet.mat");
+simul_res11 = load("Results\SimulationResults_17-Mar-2021_PLacIter1Model1ValidationSet.mat");
 
 it1 = zeros(288,4);
 it1(:,1) = simul_res11.simul_res.resultsPL.sim.tsim{1};
@@ -61,7 +61,7 @@ dlmwrite(['Validate\Iter1Model1.csv'],it1,'-append');
 
 
 %% Iteration 1, Model 2 
-simul_res12 = load("Results\SimulationResults_16-Mar-2021_PLacIter1Model2ValidationSet.mat");
+simul_res12 = load("Results\SimulationResults_17-Mar-2021_PLacIter1Model2ValidationSet.mat");
 
 it1 = zeros(288,4);
 it1(:,1) = simul_res12.simul_res.resultsPL.sim.tsim{1};
@@ -90,7 +90,7 @@ dlmwrite(['Validate\Iter1Model2.csv'],it1,'-append');
 
 
 %% Iteration 2, Model 1 
-simul_res21 = load("Results\SimulationResults_16-Mar-2021_PLacIter2Model1ValidationSet.mat");
+simul_res21 = load("Results\SimulationResults_17-Mar-2021_PLacIter2Model1ValidationSet.mat");
 
 it2 = zeros(288,4);
 it2(:,1) = simul_res21.simul_res.resultsPL.sim.tsim{1};
@@ -121,7 +121,7 @@ dlmwrite(['Validate\Iter2Model1.csv'],it2,'-append');
 
 
 %% Iteration 2, Model 1 
-simul_res22 = load("Results\SimulationResults_16-Mar-2021_PLacIter2Model2ValidationSet.mat");
+simul_res22 = load("Results\SimulationResults_17-Mar-2021_PLacIter2Model2ValidationSet.mat");
 
 it2 = zeros(288,4);
 it2(:,1) = simul_res22.simul_res.resultsPL.sim.tsim{1};

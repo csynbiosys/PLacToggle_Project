@@ -74,7 +74,7 @@ function [inputsPL] = ExtractModelPS(simul_res, simul_dat, j)
                         simul_res.inputsPL.model = M3D_load_model1_Iter0();
                         simul_res.inputsPL.exps.exp_y0{j}=M3D_steady_state(simul_res.inputsPL.model.par, simul_res.expsPL{j}.preIPTG);
                     case 1
-                        modelF = 'M3D_load_model1_Iter2.m';
+                        modelF = 'M3D_load_model1_Iter1.m';
                         if exist(modelF, 'file') == 0
                             disp("--------------------------------- WARNING ---------------------------------");
                             disp(" ");
@@ -83,7 +83,7 @@ function [inputsPL] = ExtractModelPS(simul_res, simul_dat, j)
                             disp("---------------------------------------------------------------------------");
                             return
                         end
-                        simul_res.inputsPL.model = M3D_load_model1_Iter2();
+                        simul_res.inputsPL.model = M3D_load_model1_Iter1();
                         simul_res.inputsPL.exps.exp_y0{j}=M3D_steady_state(simul_res.inputsPL.model.par, simul_res.expsPL{j}.preIPTG);
                     case 2
                         modelF = 'M3D_load_model1_Iter2.m';
