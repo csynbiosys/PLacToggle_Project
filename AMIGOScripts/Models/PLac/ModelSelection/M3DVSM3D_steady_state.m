@@ -22,15 +22,15 @@ Cit_fluo = (Kf*Cit_foldedP)/d2;
 Cit_AU = sc_molec*Cit_fluo; 
 
 % Second instance of the model
-a1_2 = theta(1);
-Vm1_2 = theta(2);
-h1_2 = theta(3);
-Km1_2 = theta(4);
-d1_2 = theta(5);
-a2_2 = theta(6);
-d2_2 = theta(7);
-Kf_2 = theta(8);
-sc_molec_2 = theta(9);
+a1_2 = theta(10);
+Vm1_2 = theta(11);
+h1_2 = theta(12);
+Km1_2 = theta(13);
+d1_2 = theta(14);
+a2_2 = theta(15);
+d2_2 = theta(16);
+Kf_2 = theta(17);
+sc_molec_2 = theta(18);
                         
 Cit_mrna_2 = (a1_2 + Vm1_2*(IPTG^h1_2/(Km1_2^h1_2+IPTG^h1_2)))/d1_2;
 
